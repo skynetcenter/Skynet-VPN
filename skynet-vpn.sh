@@ -252,7 +252,7 @@ cd /etc/openvpn/easy-rsa
 ./easyrsa gen-dh
 ./easyrsa build-server-full server nopass
 cd
-mkdir /etc/openvpn/key
+mkdir -p /etc/openvpn/key
 cp /etc/openvpn/easy-rsa/pki/issued/server.crt /etc/openvpn/key/
 cp /etc/openvpn/easy-rsa/pki/ca.crt /etc/openvpn/key/
 cp /etc/openvpn/easy-rsa/pki/dh.pem /etc/openvpn/key/
@@ -327,7 +327,7 @@ check_status openvpn@server-tcp
 # Configure OpenVPN Client
 echo -e "${INFO}Configuring OpenVPN client ...${N}"
 sleep 1
-mkdir /skynetvpn/openvpn
+mkdir -p /skynetvpn/openvpn
 cat > /skynetvpn/openvpn/client-udp.ovpn << EOF
 client
 dev tun
