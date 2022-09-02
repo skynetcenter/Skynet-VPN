@@ -234,7 +234,7 @@ check_install openvpn
 echo -e "${INFO}Configuring OpenVPN ...${N}"
 sleep 1
 wget https://github.com/OpenVPN/easy-rsa/releases/download/v3.0.8/EasyRSA-3.0.8.tgz
-tar xvf EasyRSA-3.0.8.tgz
+tar xvf EasyRSA-3.0.8.tgz > /dev/null 2>&1
 mv EasyRSA-3.0.8 /etc/openvpn/easy-rsa
 cp /etc/openvpn/easy-rsa/vars.example /etc/openvpn/easy-rsa/vars
 sed -i 's/#set_var EASYRSA_REQ_COUNTRY\t"US"/set_var EASYRSA_REQ_COUNTRY\t"MY"/g' /etc/openvpn/easy-rsa/vars
@@ -247,43 +247,16 @@ sed -i 's/#set_var EASYRSA_CA_EXPIRE\t3650/set_var EASYRSA_CA_EXPIRE\t3650/g' /e
 sed -i 's/#set_var EASYRSA_CERT_EXPIRE\t825/set_var EASYRSA_CERT_EXPIRE\t3650/g' /etc/openvpn/easy-rsa/vars
 sed -i 's/#set_var EASYRSA_REQ_CN\t\t"ChangeMe"/set_var EASYRSA_REQ_CN\t\t"Skynet VPN"/g' /etc/openvpn/easy-rsa/vars
 cd /etc/openvpn/easy-rsa
-./easyrsa --batch init-pki
-./easyrsa --batch build-ca nopass
-./easyrsa gen-dh
-./easyrsa build-server-full server nopass
+./easyrsa --batch init-pki > /dev/null 2>&1
+./easyrsa --batch build-ca nopass > /dev/null 2>&1
+./easyrsa gen-dh > /dev/null 2>&1
+./easyrsa build-server-full server nopass > /dev/null 2>&1
 cd
 mkdir -p /etc/openvpn/key
 cp /etc/openvpn/easy-rsa/pki/issued/server.crt /etc/openvpn/key/
 cp /etc/openvpn/easy-rsa/pki/ca.crt /etc/openvpn/key/
 cp /etc/openvpn/easy-rsa/pki/dh.pem /etc/openvpn/key/
 cp /etc/openvpn/easy-rsa/pki/private/server.key /etc/openvpn/key/
-cat > /etc/openvpn/server-udp.conf << EOF
-port 1194
-proto udp
-dev tun
-ca key/ca.crt
-cert key/server.crt
-key key/server.key
-dh key/dh.pem
-verify-client-cert none
-server 10.9.0.0 255.255.255.0
-ifconfig-pool-persist ipp.txt
-push "redirect-gateway def1 bypass-dhcp"
-push "dhcp-option DNS 8.8.8.8"
-push "dhcp-option DNS 8.8.4.4"
-keepalive 10 120
-cipher AES-256-CBC
-user nobody
-group nogroup
-persist-key
-persist-tun
-status /var/log/openvpn/server-udp-status.log
-log /var/log/openvpn/server-udp.log
-verb 3
-mute 10
-plugin openvpn-plugin-auth-pam.so login
-username-as-common-name
-EOF
 cat > /etc/openvpn/server-tcp.conf << EOF
 port 1194
 proto tcp
@@ -313,36 +286,18 @@ username-as-common-name
 EOF
 sed -i "s/#AUTOSTART="all"/AUTOSTART="all"/g" /etc/default/openvpn
 echo -e "net.ipv4.ip_forward = 1" >> /etc/sysctl.conf
-sysctl -p
+sysctl -p > /dev/null 2>&1
 rm EasyRSA-3.0.8.tgz
 iptables -t nat -I POSTROUTING -s 10.8.0.0/24 -o ${network} -j MASQUERADE
 iptables -t nat -I POSTROUTING -s 10.9.0.0/24 -o ${network} -j MASQUERADE
-systemctl start openvpn@server-udp
 systemctl start openvpn@server-tcp
-systemctl enable openvpn@server-udp
-systemctl enable openvpn@server-tcp
-check_status openvpn@server-udp
+systemctl enable openvpn@server-tcp > /dev/null 2>&1
 check_status openvpn@server-tcp
 
 # Configure OpenVPN Client
 echo -e "${INFO}Configuring OpenVPN client ...${N}"
 sleep 1
 mkdir -p /skynetvpn/openvpn
-cat > /skynetvpn/openvpn/client-udp.ovpn << EOF
-client
-dev tun
-proto udp
-remote xx 1194
-resolv-retry infinite
-nobind
-persist-key
-persist-tun
-cipher AES-256-CBC
-auth SHA256
-verb 3
-auth-user-pass
-setenv CLIENT_CERT 0
-EOF
 cat > /skynetvpn/openvpn/client-tcp.ovpn << EOF
 client
 dev tun
@@ -358,14 +313,10 @@ verb 3
 auth-user-pass
 setenv CLIENT_CERT 0
 EOF
-sed -i "s/xx/$ip/g" /skynetvpn/openvpn/client-udp.ovpn
 sed -i "s/xx/$ip/g" /skynetvpn/openvpn/client-tcp.ovpn
 echo -e "\n<ca>" >> /skynetvpn/openvpn/client-tcp.ovpn
 cat "/etc/openvpn/key/ca.crt" >> /skynetvpn/openvpn/client-tcp.ovpn
 echo -e "</ca>" >> /skynetvpn/openvpn/client-tcp.ovpn
-echo -e "\n<ca>" >> /skynetvpn/openvpn/client-udp.ovpn
-cat "/etc/openvpn/key/ca.crt" >> /skynetvpn/openvpn/client-udp.ovpn
-echo -e "</ca>" >> /skynetvpn/openvpn/client-udp.ovpn
 
 # Install Squid
 echo -e "${INFO}Installing Squid ...${N}"
