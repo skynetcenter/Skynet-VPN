@@ -24,8 +24,6 @@ INFO="[ ${LB}INFO${N} ] ${B}"
 OK="[ ${LG}OK${N} ] ${G}"
 ERROR="[ ${LR}ERROR${N} ] ${R}"
 
-clear
-
 # Check Services
 check_install() {
 	if [[ 0 -eq $? ]]; then
@@ -63,7 +61,9 @@ network=$(ip link | awk -F: '$0 !~ "lo|vir|wl|^[^0-9]"{print $2;getline}' | head
 domain_ip=$(ping "${domain}" -c 1 | sed '1{s/[^(]*(//;s/).*//;q}')
 ip=$(wget -qO- ipv4.icanhazip.com)
 
-# Update Packages
+clear
+
+# Update Package
 echo -e "${INFO}Updating packages ...${N}"
 sleep 1
 apt update
@@ -91,6 +91,8 @@ clear
 echo -e "${INFO}Getting domain info ...${N}"
 echo -e "Enter domain name: \c"
 read domain
+domain_ip=$(ping "${domain}" -c 1 | sed '1{s/[^(]*(//;s/).*//;q}')
+ip=$(wget -qO- ipv4.icanhazip.com)
 echo -e "${INFO}Checking domain name ...${N}"
 sleep 1
 if [[ ${domain_ip} == "${ip}" ]]; then
@@ -231,7 +233,7 @@ apt install openvpn -y
 check_install openvpn
 echo -e "${INFO}Configuring OpenVPN ...${N}"
 sleep 1
-wget "${repo}files/EasyRSA-3.0.8.tgz"
+wget https://github.com/skynetcenter/Skynet-VPN/blob/main/files/EasyRSA-3.0.8.tgz
 tar xvf EasyRSA-3.0.8.tgz
 mv EasyRSA-3.0.8 /etc/openvpn/easy-rsa
 cp /etc/openvpn/easy-rsa/vars.example /etc/openvpn/easy-rsa/vars
@@ -550,9 +552,7 @@ wget -O tcpx.sh "https://git.io/JYxKU" && chmod +x tcpx.sh && ./tcpx.sh
 
 # Cleanup
 clear
-rm -f /root/skynet-vpn.sh
-rm -f /root/install.sh
-rm -f /root/tcpx.sh
+rm -f /root/openvpn-xray.sh
 cat /dev/null > ~/.bash_history
 echo -e "clear
 cat /dev/null > ~/.bash_history
