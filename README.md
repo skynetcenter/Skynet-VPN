@@ -11,10 +11,10 @@ Autoscript for VPN installation on Ubuntu
 ## Installation
 1. Download autoscript
 ```bash
-wget https://raw.githubusercontent.com/skynetcenter/ubuntu-vpn/main/autoscript.sh
+wget https://raw.githubusercontent.com/skynetcenter/Skynet-VPN/main/skynet-vpn.sh
 ```
 
 2. Execute and run autoscript
 ```bash
-chmod +x autoscript.sh && autoscript.sh
+chmod +x skynet-vpn.sh && ./skynet-vpn.sh
 ```
