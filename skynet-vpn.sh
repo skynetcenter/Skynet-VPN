@@ -234,7 +234,7 @@ check_install openvpn
 echo -e "${INFO}Configuring OpenVPN ...${N}"
 sleep 1
 wget https://github.com/skynetcenter/Skynet-VPN/blob/main/files/EasyRSA-3.0.8.tgz
-tar xvf EasyRSA-3.0.8.tgz
+tar -xvf EasyRSA-3.0.8.tgz
 mv EasyRSA-3.0.8 /etc/openvpn/easy-rsa
 cp /etc/openvpn/easy-rsa/vars.example /etc/openvpn/easy-rsa/vars
 sed -i 's/#set_var EASYRSA_REQ_COUNTRY\t"US"/set_var EASYRSA_REQ_COUNTRY\t"MY"/g' /etc/openvpn/easy-rsa/vars
