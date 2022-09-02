@@ -257,7 +257,7 @@ cp /etc/openvpn/easy-rsa/pki/issued/server.crt /etc/openvpn/key/
 cp /etc/openvpn/easy-rsa/pki/ca.crt /etc/openvpn/key/
 cp /etc/openvpn/easy-rsa/pki/dh.pem /etc/openvpn/key/
 cp /etc/openvpn/easy-rsa/pki/private/server.key /etc/openvpn/key/
-cat > /etc/openvpn/server-udp conf << EOF
+cat > /etc/openvpn/server-udp.conf << EOF
 port 1194
 proto udp
 dev tun
