@@ -536,6 +536,12 @@ clear
 # Install Xray Onekey
 wget -N --no-check-certificate -q -O install.sh "https://raw.githubusercontent.com/wulabing/Xray_onekey/main/install.sh" && chmod +x install.sh && bash install.sh
 
+# Change Timezone
+echo -e "${INFO}Changing timezone to Asia/Kuala_Lumpur (GMT +8) ...${N}"
+sleep 1
+ln -sf /usr/share/zoneinfo/Asia/Kuala_Lumpur /etc/localtime
+clear
+
 # Install BBR
 wget -O tcpx.sh "https://git.io/JYxKU" && chmod +x tcpx.sh && ./tcpx.sh
 ./tcpx.sh
