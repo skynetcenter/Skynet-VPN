@@ -24,6 +24,8 @@ INFO="[ ${LB}INFO${N} ] ${B}"
 OK="[ ${LG}OK${N} ] ${G}"
 ERROR="[ ${LR}ERROR${N} ] ${R}"
 
+clear
+
 # Check Services
 check_install() {
 	if [[ 0 -eq $? ]]; then
@@ -56,7 +58,7 @@ check_screen() {
 }
 
 # Source
-repo='https://raw.githubusercontent.com/skynetcenter/multi-vpn/main/'
+repo='https://raw.githubusercontent.com/skynetcenter/Skynet-VPN/main/'
 network=$(ip link | awk -F: '$0 !~ "lo|vir|wl|^[^0-9]"{print $2;getline}' | head -n 1)
 domain_ip=$(ping "${domain}" -c 1 | sed '1{s/[^(]*(//;s/).*//;q}')
 ip=$(wget -qO- ipv4.icanhazip.com)
